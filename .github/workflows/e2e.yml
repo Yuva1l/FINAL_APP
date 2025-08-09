@@ -1,24 +1,21 @@
-- uses: actions/checkout@v4
-- uses: actions/setup-node@v4
-  with:
-    node-version: 20
-    cache: npm
-
-- name: Install deps (ci with fallback)
-  run: npm ci || npm install --no-audit --no-fund
-
-- name: Install Playwright
-  run: npx playwright install --with-deps
-
-- name: Build
-  run: npm run build || echo "No build script, continuing"
-
-# No start/wait steps needed anymore
-
-- name: Run Playwright tests
-  env:
-    BASE_URL: http://localhost:3000
-    EVENT_SLUG: XX
-    EXISTING_SLUG: XX
-    ADMIN_BEARER_TOKEN: ${{ secrets.ADMIN_BEARER_TOKEN }}
-  run: npm run test:e2e
+name: e2e
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci || npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps
+      - run: npm run build
+      - name: Run Playwright tests
+        env:
+          BASE_URL: http://localhost:3000
+          EVENT_SLUG: your-valid-slug
+          EXISTING_SLUG: your-existing-slug
+          ADMIN_BEARER_TOKEN: ${{ secrets.ADMIN_BEARER_TOKEN }}
+        run: npm run test:e2e

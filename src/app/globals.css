@@ -1,5 +1,6 @@
 @tailwind base;@tailwind components;@tailwind utilities;
-:root{--bg:#0b1220;--card:#111a2b;--txt:#e8f2ff}
+/* Updated colour palette for a brighter, more inviting look */
+:root{--bg:#050e1a;--card:#13284b;--txt:#f1f5fa}
 html,body{background:
 radial-gradient(1200px 600px at 20% -10%, rgba(16,140,255,.10), transparent 60%),
 radial-gradient(800px 500px at 100% 0%, rgba(147,197,253,.12), transparent 60%),

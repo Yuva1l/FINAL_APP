@@ -7,9 +7,10 @@ export default function NewForm(){
   const [venue,setVenue]=useState('Tel Aviv')
   const [startsAt,setStartsAt]=useState('2025-09-01T20:00')
   const [endsAt,setEndsAt]=useState('2025-09-02T00:00')
+  const [coverUrl,setCoverUrl]=useState('')
   const [err,setErr]=useState<string|null>(null)
   async function onSubmit(e:React.FormEvent){e.preventDefault();setErr(null)
-    const res=await fetch('/api/admin/events',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,slug,description,location:venue,startsAt,endsAt})})
+    const res=await fetch('/api/admin/events',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,slug,description,location:venue,startsAt,endsAt,coverUrl: coverUrl||undefined})})
     if(res.ok){const {id}=await res.json(); window.location.href=`/admin/events/${id}`}
     else if(res.status===409){const j=await res.json().catch(()=>({})); setErr(j.error||'Slug already in use.')}
     else setErr('Failed to create') }
@@ -20,6 +21,7 @@ export default function NewForm(){
     <input className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Slug (unique)" value={slug} onChange={e=>setSlug(e.target.value)}/>
     <textarea className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Description" value={description} onChange={e=>setDescription(e.target.value)}/>
     <input className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Location" value={venue} onChange={e=>setVenue(e.target.value)}/>
+    <input className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Cover image URL (optional)" value={coverUrl} onChange={e=>setCoverUrl(e.target.value)}/>
     <div className="grid grid-cols-2 gap-3"><div><label className="text-sm text-white/70">Starts</label>
       <input type="datetime-local" className="w-full p-3 rounded-xl bg-black/30 border border-white/10" value={startsAt} onChange={e=>setStartsAt(e.target.value)}/></div>
       <div><label className="text-sm text-white/70">Ends</label>

@@ -1,8 +1,11 @@
 import { prisma } from '@/lib/db'
-export default async function EventPage({params}:{params:{slug:string}}){
-  const event=await prisma.event.findUnique({ where:{ slug: params.slug }, include:{ tickets:true } })
-  if(!event) return <div className="card">Event not found.</div>
-  return(<div className="grid lg:grid-cols-3 gap-6">
+import { notFound } from 'next/navigation'
+
+export default async function EventPage({ params }: { params: { slug: string } }) {
+  const event = await prisma.event.findUnique({ where: { slug: params.slug }, include: { tickets: true } })
+  if (!event) return notFound()
+  return (
+    <div className="grid lg:grid-cols-3 gap-6">
     <div className="lg:col-span-2 space-y-4">
       <img src={event.coverUrl || '/placeholder.jpg'} alt={event.title} className="w-full h-72 object-cover rounded-2xl"/>
       <h1 className="text-3xl font-bold">{event.title}</h1>
@@ -28,5 +31,7 @@ export default async function EventPage({params}:{params:{slug:string}}){
           <a className="btn bg-white/10 hover:bg-white/20" href={`https://wa.me/?text=${encodeURIComponent('Check this event: '+(process.env.NEXT_PUBLIC_APP_URL||'http://localhost:3000')+'/events/'+event.slug)}`} target="_blank">WhatsApp</a>
           <a className="btn bg-white/10 hover:bg-white/20" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent((process.env.NEXT_PUBLIC_APP_URL||'http://localhost:3000')+'/events/'+event.slug)}`} target="_blank">Facebook</a>
         </div></div>
-    </aside></div>)
+    </aside>
+    </div>
+  )
 }
