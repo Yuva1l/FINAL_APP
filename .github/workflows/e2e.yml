@@ -1,52 +1,24 @@
-name: e2e
+- uses: actions/checkout@v4
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
+    cache: npm
 
-on: [push, pull_request]
+- name: Install deps (ci with fallback)
+  run: npm ci || npm install --no-audit --no-fund
 
-jobs:
-  test:
-    runs-on: ubuntu-latest
+- name: Install Playwright
+  run: npx playwright install --with-deps
 
-    steps:
-      - uses: actions/checkout@v4
+- name: Build
+  run: npm run build || echo "No build script, continuing"
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+# No start/wait steps needed anymore
 
-      # Prefer ci, but fall back to install if lockfile is out of sync.
-      - name: Install deps (ci with fallback)
-        run: |
-          npm ci || npm install --no-audit --no-fund
-
-      # Install Playwright browsers & deps (needed for headed/Chromium)
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
-      # If your app has a build step; safe to no-op if absent
-      - name: Build
-        run: npm run build || echo "No build script, continuing"
-
-      # Start the app and wait until it's up
-      - name: Start app
-        run: npm start &
-
-      - name: Wait for app
-        run: npx wait-on http://localhost:3000
-
-      # Run the tests (set env if needed)
-      - name: Run Playwright tests
-        env:
-          BASE_URL: http://localhost:3000
-          EVENT_SLUG: your-valid-slug
-          EXISTING_SLUG: your-existing-slug
-          ADMIN_BEARER_TOKEN: ${{ secrets.ADMIN_BEARER_TOKEN }} # optional
-        run: npm run test:e2e
-
-      # Upload the Playwright HTML report on failure (handy!)
-      - name: Upload report
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report
+- name: Run Playwright tests
+  env:
+    BASE_URL: http://localhost:3000
+    EVENT_SLUG: XX
+    EXISTING_SLUG: XX
+    ADMIN_BEARER_TOKEN: ${{ secrets.ADMIN_BEARER_TOKEN }}
+  run: npm run test:e2e
