@@ -1,0 +1,22 @@
+# dependencies
+node_modules/
+.pnpm-store/
+.pnp/
+.pnp.cjs
+
+# next / build
+.next/
+out/
+dist/
+*.log
+
+# env & local db
+.env
+.env.*.local
+*.sqlite
+*.db
+
+# misc
+coverage/
+.DS_Store
+*.local

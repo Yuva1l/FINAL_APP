@@ -1,0 +1,1 @@
+export default function Failure(){return(<div className='max-w-lg mx-auto card'><h1 className='text-xl font-semibold'>Payment failed</h1><p className='text-white/70'>Please try again.</p></div>)}

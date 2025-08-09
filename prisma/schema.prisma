@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MANAGER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(MANAGER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events Event[]
+}
+
+model Event {
+  id        String @id @default(cuid())
+  managerId String
+  manager   User   @relation(fields: [managerId], references: [id], onDelete: Cascade)
+
+  title         String
+  slug          String   @unique
+  description   String
+  coverUrl      String?
+  location      String
+  startsAt      DateTime
+  endsAt        DateTime
+  currency      String   @default("ILS")
+  shareLink     String?
+  commissionBps Int      @default(700) // 7% in basis points
+  fixedFee      Int      @default(0) // in minor units (agorot)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tickets TicketType[]
+  orders  Order[]
+}
+
+model TicketType {
+  id      String @id @default(cuid())
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  name       String
+  priceMinor Int // agorot
+  quantity   Int
+  sold       Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+
+  orderItems OrderItem[]
+}
+
+model Order {
+  id      String @id @default(cuid())
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  email       String
+  buyerName   String?
+  totalMinor  Int
+  currency    String      @default("ILS")
+  status      OrderStatus @default(PENDING)
+  tranzilaRef String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  ticketTypeId String
+  ticketType   TicketType @relation(fields: [ticketTypeId], references: [id])
+
+  quantity  Int
+  lineMinor Int
+}

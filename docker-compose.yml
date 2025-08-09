@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: events_saas
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  app:
+    build: .
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - TRANZILA_TERMINAL=${TRANZILA_TERMINAL}
+      - TRANZILA_SUPPLIER=${TRANZILA_SUPPLIER}
+      - TRANZILA_API_PASSWORD=${TRANZILA_API_PASSWORD}
+      - TRANZILA_RETURN_URL=${TRANZILA_RETURN_URL}
+      - TRANZILA_SUCCESS_URL=${TRANZILA_SUCCESS_URL}
+      - TRANZILA_FAILURE_URL=${TRANZILA_FAILURE_URL}
+      - TRANZILA_ENV=${TRANZILA_ENV}
+    depends_on: [db]
+    ports: ["3000:3000"]
+    command: ["npm","run","dev"]
+volumes:
+  pgdata:

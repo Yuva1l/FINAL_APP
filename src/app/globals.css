@@ -1,0 +1,8 @@
+@tailwind base;@tailwind components;@tailwind utilities;
+:root{--bg:#0b1220;--card:#111a2b;--txt:#e8f2ff}
+html,body{background:
+radial-gradient(1200px 600px at 20% -10%, rgba(16,140,255,.10), transparent 60%),
+radial-gradient(800px 500px at 100% 0%, rgba(147,197,253,.12), transparent 60%),
+var(--bg);color:var(--txt)}
+.btn{@apply inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-brand-500 hover:bg-brand-400 active:bg-brand-600 transition shadow-glow}
+.card{@apply rounded-2xl p-6 bg-[var(--card)] border border-white/5 shadow-lg}
