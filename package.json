@@ -10,7 +10,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init",
     "seed": "node scripts/seed.mjs",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@prisma/client": "5.19.0",
@@ -26,6 +27,7 @@
     "@types/cookie": "0.6.0",
     "@types/jsonwebtoken": "9.0.6",
     "@types/react": "19.1.9",
+    "@playwright/test": "1.47.2",
     "autoprefixer": "10.4.20",
     "postcss": "8.4.47",
     "prisma": "5.19.0",

@@ -1,0 +1,40 @@
+name: CI
+on:
+  push: { branches: [main, qa-hardening-*] }
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: events_saas_ci
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/events_saas_ci?schema=public
+      JWT_SECRET: test_secret
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci --ignore-scripts
+      - run: npx prisma generate
+      - run: npx prisma migrate dev --name init --skip-generate --skip-seed
+      - run: npx playwright install --with-deps
+      - run: npm run build
+      - run: npx prisma db push  # for safety in CI
+      - run: nohup npm start &  # start server on 3000
+      - run: npx wait-on http://localhost:3000
+      - run: npm run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: test-results/
