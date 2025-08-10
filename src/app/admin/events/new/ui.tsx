@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import UiButton from '@/components/UiButton'
 export default function NewForm(){
   const [title,setTitle]=useState('My Party')
   const [slug,setSlug]=useState('my-party')
@@ -13,16 +14,19 @@ export default function NewForm(){
     if(res.ok){const {id}=await res.json(); window.location.href=`/admin/events/${id}`}
     else if(res.status===409){const j=await res.json().catch(()=>({})); setErr(j.error||'Slug already in use.')}
     else setErr('Failed to create') }
-  return(<form onSubmit={onSubmit} className="card max-w-xl space-y-3">
-    <h1 className="text-xl font-semibold">New event</h1>
-    {err && <div className="text-red-400 text-sm">{err}</div>}
-    <input className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Title" value={title} onChange={e=>setTitle(e.target.value)}/>
-    <input className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Slug (unique)" value={slug} onChange={e=>setSlug(e.target.value)}/>
-    <textarea className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Description" value={description} onChange={e=>setDescription(e.target.value)}/>
-    <input className="w-full p-3 rounded-xl bg-black/30 border border-white/10" placeholder="Location" value={venue} onChange={e=>setVenue(e.target.value)}/>
-    <div className="grid grid-cols-2 gap-3"><div><label className="text-sm text-white/70">Starts</label>
-      <input type="datetime-local" className="w-full p-3 rounded-xl bg-black/30 border border-white/10" value={startsAt} onChange={e=>setStartsAt(e.target.value)}/></div>
-      <div><label className="text-sm text-white/70">Ends</label>
-      <input type="datetime-local" className="w-full p-3 rounded-xl bg-black/30 border border-white/10" value={endsAt} onChange={e=>setEndsAt(e.target.value)}/></div></div>
-    <button className="btn">Create</button></form>)
+  return(
+    <form onSubmit={onSubmit} className="card max-w-xl space-y-3">
+      <h1 className="text-xl font-semibold">New event</h1>
+      {err && <div className="text-red-500 text-sm">{err}</div>}
+      <input className="w-full" placeholder="Title" value={title} onChange={e=>setTitle(e.target.value)}/>
+      <input className="w-full" placeholder="Slug (unique)" value={slug} onChange={e=>setSlug(e.target.value)}/>
+      <textarea className="w-full" placeholder="Description" value={description} onChange={e=>setDescription(e.target.value)}/>
+      <input className="w-full" placeholder="Location" value={venue} onChange={e=>setVenue(e.target.value)}/>
+      <div className="grid grid-cols-2 gap-3"><div><label className="text-sm text-slate-600">Starts</label>
+        <input type="datetime-local" className="w-full" value={startsAt} onChange={e=>setStartsAt(e.target.value)}/></div>
+        <div><label className="text-sm text-slate-600">Ends</label>
+        <input type="datetime-local" className="w-full" value={endsAt} onChange={e=>setEndsAt(e.target.value)}/></div></div>
+      <UiButton type="submit">Create</UiButton>
+    </form>
+  )
 }
