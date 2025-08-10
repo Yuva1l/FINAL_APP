@@ -1,8 +1,33 @@
-@tailwind base;@tailwind components;@tailwind utilities;
-:root{--bg:#0b1220;--card:#111a2b;--txt:#e8f2ff}
-html,body{background:
-radial-gradient(1200px 600px at 20% -10%, rgba(16,140,255,.10), transparent 60%),
-radial-gradient(800px 500px at 100% 0%, rgba(147,197,253,.12), transparent 60%),
-var(--bg);color:var(--txt)}
-.btn{@apply inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-brand-500 hover:bg-brand-400 active:bg-brand-600 transition shadow-glow}
-.card{@apply rounded-2xl p-6 bg-[var(--card)] border border-white/5 shadow-lg}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fonts are loaded via next/font in layout.tsx */
+
+:root{--txt:#1d1d1d;}
+html,body{
+  @apply font-body;
+  background:linear-gradient(135deg,#ff8ae2,#ffc27c,#a8ffb0,#d2b3ff,#ff8ae2);
+  background-size:400% 400%;
+  animation:gradient 30s ease infinite;
+  color:var(--txt);
+  min-height:100%;
+}
+
+/* dreamy floating blobs */
+body::before,body::after{
+  content:"";position:fixed;z-index:-1;border-radius:50%;filter:blur(120px);opacity:.4;width:40rem;height:40rem;pointer-events:none;
+}
+body::before{background:radial-gradient(circle,#ff8ae2,transparent 70%);top:-10%;left:-10%;animation:float 20s ease-in-out infinite;}
+body::after{background:radial-gradient(circle,#a8ffb0,transparent 70%);bottom:-10%;right:-10%;animation:float 25s ease-in-out infinite;}
+
+@layer base{
+  h1,h2,h3,h4,h5,h6{@apply font-heading text-vibe-purple;letter-spacing:.03em;}
+  input,textarea,select{@apply rounded-3xl bg-white/60 border border-vibe-purple/30 text-slate-800 placeholder-slate-500 p-3 focus:outline-none focus:ring-2 focus:ring-vibe-pink/50;}
+}
+
+@layer components{
+  .btn{@apply inline-flex items-center gap-2 px-6 py-3 rounded-3xl font-semibold text-white bg-gradient-to-r from-vibe-pink to-vibe-purple shadow-glow transition;
+  }
+  .card{@apply rounded-3xl p-6 bg-white/60 backdrop-blur-md border border-vibe-purple/30 shadow-lg animate-float;}
+}

@@ -1,1 +1,1 @@
-export default function Success(){return(<div className='max-w-lg mx-auto card'><h1 className='text-xl font-semibold'>Payment successful 🎉</h1><p className='text-white/70'>Your order is confirmed.</p></div>)}
+export default function Success(){return(<div className='max-w-lg mx-auto card'><h1 className='text-xl font-semibold'>Payment successful 🎉</h1><p className='text-slate-700'>Your order is confirmed.</p></div>)}
