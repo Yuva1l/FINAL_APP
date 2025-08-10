@@ -1,4 +1,10 @@
-import Link from 'next/link'
+import UiButton from '@/components/UiButton'
 export default function AdminLanding(){
-  return(<div className="space-y-4"><h1 className="text-2xl font-semibold">Admin</h1><p className="text-white/70">Log in to manage events.</p><Link className="btn" href="/admin/login">Login</Link></div>)
+  return(
+    <div className="space-y-4">
+      <h1 className="text-3xl font-semibold">Admin</h1>
+      <p className="text-slate-700">Log in to manage events.</p>
+      <UiButton href="/admin/login">Login</UiButton>
+    </div>
+  )
 }
